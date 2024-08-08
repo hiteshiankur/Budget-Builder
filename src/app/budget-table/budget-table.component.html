@@ -1,0 +1,106 @@
+ 
+ <h1>Budget Builder</h1>
+ <div class="month">
+    <div class="p-4">
+        <label for="startMonth" class="block font-bold">Start Month:</label>
+        <input id="startMonth" type="month" [(ngModel)]="startMonth" class="border p-2 mr-2">
+    </div>
+
+    <div class="p-4">
+        <label for="endMonth" class="block font-bold">End Month:</label>
+        <input id="endMonth" type="month" [(ngModel)]="endMonth" class="border p-2 mr-2">
+    </div>
+
+    <div class="p-4">
+        <button (click)="addMonthsInRange()" class="bg-blue-500 text-white p-2 rounded">Submit</button>
+    </div>
+</div>
+
+
+<div class="budget-table p-4">
+    <table class="min-w-full border-collapse border border-gray-300">
+        <thead>
+            <tr>
+                <th class="border border-gray-300 p-2">Category</th>
+                <th *ngFor="let month of months" class="border border-gray-300 p-2">{{ month }}</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <ng-container *ngFor="let parentCategory of budgetData; let parentIndex = index">
+                <tr>
+                    <td [attr.colspan]="months.length + 1" class="font-bold p-2"
+                        style="background-color: bisque; font-weight: bold; font-size: large;">{{
+                        parentCategory.parentCategoryName }}
+                    </td>
+                </tr>
+
+                <ng-container *ngFor="let categoryGroup of parentCategory.parentCategory; let groupIndex = index">
+                    <tr>
+                        <td [attr.colspan]="months.length + 1" class="font-bold p-2" style="font-weight: bold;">
+                            <input type="text" [(ngModel)]="categoryGroup.category" class="w-full text-center">
+                        </td>
+                        <td [attr.colspan]="months.length + 1" class="font-bold p-2 pl-6">
+                            <button (click)="deleteCategoryGroup(parentIndex, groupIndex)"
+                                class="bg-red-500 text-white p-1 rounded" style="color: red;">Delete Group</button>
+                        </td>
+                    </tr>
+
+                    <ng-container *ngFor="let subCategory of categoryGroup.subcategory; let i = index; trackBy: trackByIndex">
+                        <tr>
+                            <td class="border border-gray-300 p-2">
+                                <input type="text" [(ngModel)]="subCategory.name" class="w-full text-center">
+                            </td>
+                            <td *ngFor="let value of subCategory.values; let j = index"
+                                class="border border-gray-300 p-2">
+                                <input type="number" [(ngModel)]="subCategory.values[j]"
+                                    (ngModelChange)="updateTotals()" class="w-full text-center">
+                            </td>
+                            <td class="p-2">
+                                <button (click)="deleteSubCategory(parentCategory, categoryGroup, i)"
+                                    class="bg-red-500 text-white p-1 rounded">Delete</button>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <tr>
+                        <td [attr.colspan]="months.length + 1" class="font-bold p-2 pl-6">
+                            <button (click)="addSubCategory(parentCategory, categoryGroup)"
+                                class="bg-green-500 text-white p-1 rounded" style="color: lightskyblue;">Add New
+                                Category</button>
+                        </td>
+                    </tr>
+
+                </ng-container>
+                <tr>
+                    <td [attr.colspan]="months.length + 1" class="font-bold p-2">
+                        <button class="bg-green-500 text-white p-1 rounded" style="color: blue;"
+                            (click)="addCategoryGroup(parentIndex)">Add New Parent Category</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="font-bold p-2">Total</td>
+                    <td *ngFor="let month of months; let j = index" class="font-bold p-2">
+                        {{ getTotalForColumn(parentIndex, j) }}
+                    </td>
+                </tr>
+            </ng-container>
+
+
+            <tr>
+                <td class="font-bold border border-gray-300 p-2">Profit / Loss</td>
+                <td *ngFor="let month of months; let j = index" class="border border-gray-300 p-2">
+                    {{ calculateProfitLoss(j) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="font-bold border border-gray-300 p-2">Closing Balance</td>
+                <td *ngFor="let month of months; let j = index" class="border border-gray-300 p-2">
+                    {{ calculateClosingBalance(j) }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

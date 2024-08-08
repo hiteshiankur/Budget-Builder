@@ -1,0 +1,28 @@
+h1{
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    background: lightgray;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table, th, td {
+    border: 1px solid black;
+  }
+  
+  button{
+    border-radius: 5px;
+    border: 1px solid;
+    padding: 0px 10px;
+  }
+
+  .month{
+    display: flex;
+    margin: 20px;
+    gap: 5rem;
+  }
